@@ -10,7 +10,7 @@ Berklee DNA Festival Super Cool SuperCollider Installation/Performance environme
 
 ##sound design & tuning
 
-#Claire
+#Aleks
 
 
 #Ideas
