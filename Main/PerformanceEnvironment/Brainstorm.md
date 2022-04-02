@@ -12,6 +12,7 @@ Berklee DNA Festival Super Cool SuperCollider Installation/Performance environme
 
 #Aleks
 
+##Research into applications of Neo-Riemannian theory
 
 #Ideas
 
