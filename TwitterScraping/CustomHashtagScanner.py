@@ -6,7 +6,7 @@ class CustomHashtagScanner:
     #q = customHashtag + ' since_id:' + str(since_id_hashtag)
     count = 10
     #search_results = twitter_api.search.tweets(q=q, count=count)
-    statuses = search_results['statuses']
+    #statuses = search_results['statuses']
     #print(json.dumps(statuses[0], indent=1))
     #for status in statuses:
     #    print(status['text'])
@@ -28,4 +28,5 @@ class CustomHashtagScanner:
                     print("INIT HASHTAG FOUND " + tweet['created_at'])
                 else:
                     self.client.send_message("/BNOOSC/CustomHashtag/", [self.customHashtag, tweet['text'].replace(self.customHashtag, '').strip()])
+                    print("Hashtag Scanner Fired")
                     

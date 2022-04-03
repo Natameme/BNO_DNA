@@ -17,8 +17,7 @@ class WorldTrendManager:
         self.analyzer = SentimentIntensityAnalyzer()
         self.api = _api
         # Obtain world trends
-        self.world_trends = dict.fromkeys(_api.trends.place(_id=WORLD_WOE_ID)[:self.standard_trends_size], \
-            base_sentiment.copy())
+        self.WorldTrendsInit()
         self.current_results = [''] * self.standard_trends_size
         self.UpdateBatchIndexes()
         self.sentiment_keys=['neg', 'neu', 'pos', 'compound']
@@ -40,9 +39,9 @@ class WorldTrendManager:
 
     
     def ThingsToLookFor(self):
-        return self.world_trends[self.starting_index:self.ending_index]
+        return list(self.world_trends.keys())[self.starting_index:self.ending_index]
     
-    def QueryResults(self, results):
+    def ReturnQuery(self, results):
         for result in results:
             self.AnalyzeTweets(results[result])
         self.RecalculateAveragePositivity()
@@ -91,5 +90,13 @@ class WorldTrendManager:
         self.client.send_message("/BNOOSC/Sentiment/", \
              [self.sentiment['neg'], self.sentiment['neu'], self.sentiment['pos'],\
                   self.sentiment['compound']])
+
+    def WorldTrendsInit(self):
+        trend_names = []
+        twitter_trends = self.api.trends.place(_id=WORLD_WOE_ID)[0]['trends'][:self.standard_trends_size]
+        for trend in twitter_trends:
+            trend_names.append(trend['name'])
+        self.world_trends = dict.fromkeys(trend_names, \
+            base_sentiment.copy())
 
     
