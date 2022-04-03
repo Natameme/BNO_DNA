@@ -15,7 +15,7 @@ OSC messages contain
 
 * Every time someone hashtags something and the nessage (we could have our special hashtag like #BNODNA) that could trigger something.
     * Address: "/BNOOSC/CustomHastag/"
-    * Content: string (the hashtag itself), string (the rest of the text of the tweet)
+    * Content: string (the hashtag itself, currently detecting #BNODNA), string (the rest of the text of the tweet)
 
 * Hashtaged "notes" every hour to see what chords appear (#F, #C, #Bb...) Although I expect there to be mostly #F for the meme, but who knows!
     * Address: "/BNOOSC/HashNote/"
