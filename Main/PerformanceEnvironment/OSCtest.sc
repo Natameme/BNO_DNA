@@ -12,6 +12,8 @@ GENERAL TODO:
 for Saturday 4/9: get some proof-of-concept demo running
 */
 
+//TODO: Load SynthdefLibrary
+
 
 //SENTIMENT
 /*TODO:
@@ -19,25 +21,25 @@ interpolate sentiment value into a scale selector system*/
 (
 ~sentiment = OSCFunc({ arg msg, time, addr, recvPort;
 	~timbre = msg[1]; },
+~timbre = ~timbre*100;
 ~timbre.postln;
 
 '/BNOOSC/Sentiment/');
 
 )
 
-/*m2*/ 16/15;
-/*M2*/ 9/8;
-/*m3*/ 6/5;
-/*n3*/ 11/9;
-/*M3*/ 5/4;
-/*P4*/ 4/3;
-/*#4*/ 7/5;
-/*P5*/ 3/2;
-/*m6*/ 8/5;
-/*n6*/ 8/11;
-/*M6*/ 5/3;
-/*m7*/ 9/5;
-/*M7*/ 15/8;
+~sentArr = Bag[1, 2];
+~sentArr.add(3);
+~sentArr.remove(2);
+
+/*SENTIMENT VALUE INTERPOLATION
+
+> create a 2 value event stream.
+     Value 0 = newest Sentiment Value, Value 1 = Previous Sentiment Value
+> interpolate 2 values into a Line.kr, output to a Bus.control(s,1);
+> use variable name for the control bus to control parameters within the Pbind
+*/
+
 //LFO Realtime Control Test
 (
 ~lfo1 = Bus.control(s,1);
@@ -89,9 +91,9 @@ interpolate message into a system that allows control of SC data
 add noteHash contents to a stream, which selects different scale degrees for use in note triggering*/
 (
 ~noteHash = OSCFunc({ arg msg, time, addr, recvPort;
-	//msg[1].postln;
+	~val = msg[1];
 	~note = Bag.new(n: 16);
-	~note.add(msg[1]);
+	~note.add(~val);
 	~note.contents.postln;
 },
 '/BNOOSC/HashNote/');
