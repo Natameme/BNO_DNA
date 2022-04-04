@@ -42,8 +42,7 @@ class WorldTrendManager:
         return list(self.world_trends.keys())[self.starting_index:self.ending_index]
     
     def ReturnQuery(self, results):
-        for result in results:
-            self.AnalyzeTweets(results[result])
+        self.AnalyzeTweets(results)
         self.RecalculateAveragePositivity()
         self.FireOSCMessage()
         # Increase batch indexes and update them
@@ -78,12 +77,11 @@ class WorldTrendManager:
     def AnalyzeTweets(self, hashtag_dict):
         for hashtag in hashtag_dict:
             sentiment = base_sentiment.copy()
-            for tweets in hashtag_dict[hashtag]:
-                for tweet in tweets:
-                    tweet_sentiment = self.analyzer.polarity_scores(tweet)
-                    for key in self.sentiment_keys:
-                        sentiment[key] += tweet_sentiment[key]
-                    sentiment['count'] += 1
+            for tweet in hashtag_dict[hashtag]:
+                tweet_sentiment = self.analyzer.polarity_scores(tweet['text'])
+                for key in self.sentiment_keys:
+                    sentiment[key] += tweet_sentiment[key]
+                sentiment['count'] += 1
             self.world_trends[hashtag] = sentiment
 
     def FireOSCMessage(self):

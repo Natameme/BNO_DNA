@@ -39,7 +39,8 @@ noteScraper = NoteScraper(client)
 while True:
     thingsToLookFor = []
     try:
-        thingsForTrends = trendsManager.ThingsToLookFor()
+      thingsForTrends = trendsManager.ThingsToLookFor()
+      #thingsForTrends = []
     except:
         print("Exception (ask Juan): trends manager call failed")
         thingsForTrends = []
@@ -67,14 +68,14 @@ while True:
         print("WARNING: query too long, taking hashtags off")
         query = query[query.find(' OR ')+len(' OR '):]
 
-    search_results = twitter_api.search.tweets(q=query, count=count)
+    search_results = twitter_api.search.tweets(q=query, count=count)['statuses']
     trendsQueryResults = {}
     scannerQueryResults = {}
     hashNoteQueryResults = {}
+   
     for search_result in search_results:
-        
         for thingForTrends in thingsForTrends:
-            if thingForTrends in search_result:
+            if thingForTrends in search_result['text']:
                 if thingForTrends in trendsQueryResults:
                     trendsQueryResults[thingForTrends].append(search_result)
                 else:
@@ -82,7 +83,7 @@ while True:
         
         
         for thingForScanner in thingsForScanner:
-            if thingForScanner in search_result:
+            if thingForScanner in search_result['text']:
                 if thingForScanner in scannerQueryResults:
                     scannerQueryResults[thingForScanner].append(search_result)
                 else:
@@ -90,7 +91,7 @@ while True:
         
         
         for thingForNoteScraper in thingsForNoteScraper:
-            if thingForNoteScraper in search_result:
+            if thingForNoteScraper in search_result['text']:
                 if thingForNoteScraper in hashNoteQueryResults:
                     hashNoteQueryResults[thingForNoteScraper].append(search_result)
                 else:
