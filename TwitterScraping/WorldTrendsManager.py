@@ -1,5 +1,3 @@
-import nltk
-from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 WORLD_WOE_ID = 1
 US_WOE_ID = 23424977
@@ -10,28 +8,29 @@ class WorldTrendManager:
     batch_size = 10
     standard_trends_size = 50
     sentiment = base_sentiment.copy()
-    def __init__(self, _client, _api):
+    def __init__(self, _client, _api, _analyzer):
         self.client = _client
         # Instantiate the sentiment analyzer
-        nltk.download('vader_lexicon')
-        self.analyzer = SentimentIntensityAnalyzer()
+        self.analyzer = _analyzer
         self.api = _api
         # Obtain world trends
         self.WorldTrendsInit()
         self.current_results = [''] * self.standard_trends_size
         self.UpdateBatchIndexes()
         self.sentiment_keys=['neg', 'neu', 'pos', 'compound']
+        self.update_every_base = 4
+        self.update_countdown = self.update_every_base
         
     
     def UpdateTrends(self):
-        new_trends = self.api.trends.place(_id=self.WORLD_WOE_ID)[:self.standard_trends_size]
-        not_trendy_anymore = self.world_trends.keys().copy()
-        for trend in new_trends:
-            if trend in self.world_trends:
+        new_trends = self.api.trends.place(_id=WORLD_WOE_ID)[:self.standard_trends_size]
+        not_trendy_anymore = list(self.world_trends.keys()).copy()
+        for trend in new_trends[0]['trends']:
+            if trend['name'] in list(self.world_trends.keys()):
                 # This one is still trendy
-                not_trendy_anymore.remove(trend)
+                not_trendy_anymore.remove(trend['name'])
             else:
-                self.world_trends[trend] = None
+                self.world_trends[trend['name']] = base_sentiment.copy()
         
         for trend in not_trendy_anymore:
             del self.world_trends[trend]
@@ -48,6 +47,10 @@ class WorldTrendManager:
         # Increase batch indexes and update them
         if (self.ending_index >= self.standard_trends_size-1):
             self.current_batch = 1
+            self.update_countdown -= 1
+            if self.update_countdown == 0:
+                self.update_countdown = self.update_every_base
+                self.UpdateTrends()
         else:
             self.current_batch += 1
         self.UpdateBatchIndexes()
@@ -88,6 +91,8 @@ class WorldTrendManager:
         self.client.send_message("/BNOOSC/Sentiment/", \
              [self.sentiment['neg'], self.sentiment['neu'], self.sentiment['pos'],\
                   self.sentiment['compound']])
+        print("Sentiment Analysis fired " + str([self.sentiment['neg'], self.sentiment['neu'], self.sentiment['pos'],\
+                  self.sentiment['compound']]))
 
     def WorldTrendsInit(self):
         trend_names = []

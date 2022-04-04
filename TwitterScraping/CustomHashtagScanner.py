@@ -24,9 +24,9 @@ class CustomHashtagScanner:
             for tweet in tweets[hashtag]:
                 if tweet['id']> self.since_id_hashtag:
                     self.since_id_hashtag = tweet['id']
-                if self.customHashtag in tweet['text'] and self.init_tweet_text in tweet['text']:
-                    print("INIT HASHTAG FOUND " + tweet['created_at'])
-                else:
-                    self.client.send_message("/BNOOSC/CustomHashtag/", [self.customHashtag, tweet['text'].replace(self.customHashtag, '').strip()])
-                    print("Hashtag Scanner Fired")
+                    if self.customHashtag in tweet['text'] and self.init_tweet_text in tweet['text']:
+                        print("INIT HASHTAG FOUND " + tweet['created_at'])
+                    else:
+                        self.client.send_message("/BNOOSC/CustomHashtag/", [self.customHashtag, tweet['text'].replace(self.customHashtag, '').strip()])
+                        print("Hashtag Scanner Fired")
                     

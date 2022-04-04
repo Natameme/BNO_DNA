@@ -1,5 +1,5 @@
 class NoteScraper:
-    def __init__(self, client):
+    def __init__(self, client, analyzer):
         self.notes = [['#A', '#B', '#C', '#D', '#E', '#F', '#G'], [], []]
         for note in self.notes[0]:
             #flats
@@ -8,6 +8,7 @@ class NoteScraper:
             self.notes[2].append(note + 's')
         self.client = client
         self.current_batch = 0
+        self.analyzer = analyzer
     
     def ThingsToLookFor(self):
         self.current_batch = (self.current_batch+1)%len(self.notes)
@@ -16,5 +17,9 @@ class NoteScraper:
     def ReturnQuery(self, tweets):
         for hashtag in tweets:
             for tweet in tweets[hashtag]:
+                polarity_scores = self.analyzer.polarity_scores(tweet['text'])
                 self.client.send_message("/BNOOSC/HashNote/", \
-                    [hashtag[1:], tweet['text'].replace(hashtag, '').strip()])
+                    [hashtag[1:], tweet['text'].replace(hashtag, '').strip(), 
+                    polarity_scores['pos'], polarity_scores['neu'], polarity_scores['neg'],
+                    polarity_scores['compound']])
+                print("Note Scraper Fired")
