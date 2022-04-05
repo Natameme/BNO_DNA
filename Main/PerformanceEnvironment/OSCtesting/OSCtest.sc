@@ -28,9 +28,7 @@ interpolate sentiment value into a scale selector system*/
 
 )
 
-~sentArr = Bag[1, 2];
-~sentArr.add(3);
-~sentArr.remove(2);
+
 
 /*SENTIMENT VALUE INTERPOLATION
 
