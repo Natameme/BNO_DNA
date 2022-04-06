@@ -1,6 +1,6 @@
 //Compilation of All of my Supercollider Synthdefs
 
-( //2.a click outside this parenthesis to add all to server
+~lib_func = { //2.a click outside this parenthesis to add all to server
 //PBind Synths
 
 //////////
@@ -119,7 +119,6 @@ SynthDef(\harmonica,{
 	sig = Out.ar(out, Pan2.ar(((osc * ampEnv)+(hit*0.05)) * mVol, pan));
 }).add;
 
-(
 SynthDef(\PianoC3,{
 	arg out = 1, oFreq=160, aAmt=1, aAtk= 0.001, aDec= 5.98, hAmt=0.9, nAmt= 1, iAtk = 0.007, iDec=0.022, fFreq = 1000, pan= 0.5, mVol = 1.0, hVol = 0.01, gate=1;
 	var osc, ampEnv, hit, bow, filt, sig;
@@ -138,68 +137,8 @@ oFreq *	2.0023023791251	, oFreq *	3.00613967766692	, oFreq *	4.00767459708365	, 
 	filt = RLPF.ar(osc, fFreq);
 	sig = Out.ar(out, Pan2.ar((mVol * ((filt * ampEnv)) + (hit * hVol)), pan));
 }).add;
-)
 //end of addAll
-)
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Drones////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/////////////
-//Noise Drone
-/////////////
-(
-SynthDef(\wind, {
-	arg out, amp = 0.06, gate = 1,atk = 1, dec= 4, lfoF= 0.01, lfoR= 0.1, lfoOfst= 0.3, ctf= 500, q = 10;
-    var env, sines;
-    env = Linen.kr(
-		gate, atk, 1, dec, 2);
-	sines = RLPF.ar(WhiteNoise.ar(amp * SinOsc.kr(lfoR, 0, lfoF, lfoOfst)), ctf , q); // A mix of 8 oscillators
-		Out.ar(out,
-			(sines) * env);
-}, [0, 0.1, 0]).add;
-x = Synth(\wind);
-)
-
-//MODULATION
-//LFO Frequency and Range
-x.setn(\amp, 0.6);
-x.setn(\lfoF, 0.01, \lfoR, 0.11);
-//attack time
-x.setn(\atk, 10);
-//Gate Off & Decay Time
-x.setn(\gate, 0,\dec, 1);
-
-/////////////
-//Chord Drone
-/////////////
-(
-SynthDef(\fractionals, {
-	arg out, amp = 0.2, freqs = #[100, 100, 100, 100, 100, 100, 100, 100], gate = 1,atk = 10, dec= 4, lfoF= 0.01, lfoR= 1, mVol = 1;
-    var env, sines;
-    env = Linen.kr(
-		gate, atk, 1, dec, 2);
-	sines = SinOsc.ar(
-		freqs +.t [0,0.5] + SinOsc.ar(
-			freqs +.t [0,0.5], mul: SinOsc.kr(
-				lfoF, mul: lfoR)),0, amp).cubed.sum; // A mix of 8 oscillators
-		Out.ar(out,
-		((sines) * env)* mVol);
-}, [0, 0.1, 0]).add;
-f = Synth(\fractionals);
-
-SynthDef(\wind, {
-	arg out, amp = 1, gate = 1, atk = 1, dec= 4, lfoAmt= 0.01, lfoR= 0.1, lfoOfst= 0.3, ctf= 500, q = 10, mVol = 1.0;
-    var env, sines;
-    env = Linen.kr(
-		gate, atk, 1, dec, 2);
-	sines = RLPF.ar(WhiteNoise.ar(amp), ctf * SinOsc.kr(lfoR, 0, lfoAmt, lfoOfst) , q); // A mix of 8 oscillators
-		Out.ar(out,
-		(sines * env) * mVol);
-}, [0, 0.1, 0]).add;
-
-)
+}
 
 
 
