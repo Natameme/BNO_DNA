@@ -1,6 +1,6 @@
 //Compilation of All of my Supercollider Synthdefs
 
-( //click outside this parenthesis to add all to server
+( //2.a click outside this parenthesis to add all to server
 //PBind Synths
 
 //////////

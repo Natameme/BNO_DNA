@@ -1,13 +1,30 @@
+/*
+MAIN PERFORMANCE ENVIRONMENT
 
+how to start
+
+1.  Run main.py in TwitterScraping folder from terminal
+1a. Boot SC server
+1b. Trigger OSC Parsing Code in SC
+
+2. (NEEDS FIX) wait for 4 values to accumulate in sentiment array, and 16 in the note array
+2a.(NEEDS FIX) Open SynthLibrary.scd and Trigger Synthdefs
+
+3. Trigger Pbind Code
+*/
+
+//1b. OSC Parsing from Twitter Scraper
 (
-~sentArr = [0,0];
-
+~sentOn = 0;
+//Sentiment Scraper
+~sentArr = Array.new(4);
+//OSC function
 ~sentiment = OSCFunc({ arg msg, time, addr, recvPort;
+	~sentOn = 1;
 	//spit out OSC float
 	~timbre = msg[1]*10;
 	//load variable into array stream
-	~sentArr.put(1, ~sentArr[0]);
-	~sentArr.put(0, ~timbre);
+	~sentArr.addFirst(~timbre);
 	~sentArr.postln;
 	//convert array into line
 	~ctrlLine= Bus.control(s,1);
@@ -15,47 +32,35 @@
 },
 
 '/BNOOSC/Sentiment/');
-)
-
-
-
-//test code
-~testArr = [0,0];
-(
-~newVal = 1.0.linrand;
-
-
-~testArr.put(1, ~testArr[0]);
-~testArr.put(0, ~newVal);
-
-)
-
-
-
 
 //NOTEHASH
 // Take input into array
-(
+~noteOn = 0;
 //Note Array
 ~note = Array.new(16);
 ~noteHash = OSCFunc({ arg msg, time, addr, recvPort;
+	~noteOn = 1;
 	~val = msg[1];
-	~note.addFirst((~val.ascii.at(0)-64*1.0)*0.571428571428571);
+	~note.addFirst((~val.ascii.at(0)-64));
 	~note;
 	~note.postln;
 },
 '/BNOOSC/HashNote/');
 )
 
-
+//Note Generator
+//TODO: add noteOn triggering to prevent errors at beginning of composition
 (
+~sentLine=Bus.control(s, 1);
+{Out.kr(~sentLine, Line.kr(~sentArr[0], ~sentArr[1], ~sentArr[2]))}.play;
+
 ~root = 261;
 ~bells.stop;
 ~bells= Pbind(
 	\instrument, \PianoC3,
 	\pan, 0.9,
-	\dur, Pwhite(~sentArr[0],~sentArr[1],inf),
-	\fmAmt, 1,
+	\dur, Prand([~sentArr[0]*10, ~sentArr[1]*10, ~sentArr[2]*10, ~sentArr[3]*10],inf),
+	\fmAmt, Pfunc{~sentLine.asMap},
 	\oFreq, Prand([
 		~root * ~note[0],
 		~root * ~note[1],
@@ -77,28 +82,3 @@
 	\aAmt, 0.08,
 ).play;
 )
-
-
-~note.windex;
-
-[1.0, 1.0, 3.0, 3.0, 3.0, 3.0, 3.0].windex.postln;
-~val.ascii-65;
-
-'A'.ascii;
-'B'.ascii;
-'C'.ascii;
-'D'.ascii;
-'E'.ascii;
-'F'.ascii;
-'G'.ascii-64;
-
-"foo".postln;
-
-
-(
-~value = 'c';
-~noteArr = Array.new(16);
-16.do({arg i = 0; ~noteArr[i+1] = ~noteArr[i]});
-~noteArr[0]=~value;
-)
-
