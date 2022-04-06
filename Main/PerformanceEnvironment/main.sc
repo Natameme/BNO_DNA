@@ -13,6 +13,9 @@ how to start
 3. Trigger Pbind Code
 */
 
+File.open("/Users/gnat/Documents/GitHub/BNO_DNA/Main/Synths/SynthLibrary.scd", r);
+
+
 //1b. OSC Parsing from Twitter Scraper
 (
 ~sentOn = 0;
