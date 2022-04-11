@@ -1,106 +1,75 @@
-/*
-MAIN PERFORMANCE ENVIRONMENT
-
-how to start
-
-1.  Run main.py in TwitterScraping folder from terminal
-
-2. Trigger OSC Parsing Code in SC
-
-3. Trigger Pbind Code
-
-*/
-//SELF DESTRUCT BUTTON: turns off twitter scraper and kills server
-/*(
-Pipe.new("cd " ++ ~path ++ "/main.py", "w");
-)*/
-
+//1. Boot Server
 s.boot;
-//~oscModule = ("cd " ++ ~path ++ "TwitterScraping/main.py");
-(
+
+(//2. SynthDef Load
 ~path = PathName(thisProcess.nowExecutingPath).parentPath; //++"subFolder/"
 ~synthLib = (~path++"Synths/SynthLibrary.scd");
 ~synthLib.load;
 ServerTree.add(~lib_func);
+Synth(\PianoC3);
 )
 
+//3. Load python script in Terminal Window
 
-//2. OSC Parsing from Twitter Scraper
-/*(
-Pipe.new("cd " ++ ~path ++ "TwitterScraping/main.py && python3 main.py" , "w");
-Pipe.new("" , "w");
-)*/
-(
-//Sentiment Scraper
-~sentArr = Array.new(4);
-~sentArr.fill(4, 0);
-
-~note = Array.new(16);
-~note.fill(16, 0);
-
-
-~sentOn = 0;
-
-//OSC function
-~sentiment = OSCFunc({ arg msg, time, addr, recvPort;
-	~sentOn = 1;
-	//spit out OSC float
-	~timbre = msg[1]*10;
-	//load variable into array stream
-	~sentArr.addFirst(~timbre);
+(//4. Sentiment Scraping
+~sentArr = Array.newClear(4);
+~sentArr = Array.fill(4, 0);
+o = OSCFunc({ arg msg, time, addr, recvPort;
+	~sentArr.put(0, msg[1]);
+	~sentArr.put(1, msg[2]);
+	~sentArr.put(2, msg[3]);
+	~sentArr.put(3, msg[4]);
+	"Sentiment".postln;
 	~sentArr.postln;
-	//convert array into line
-	~ctrlLine= Bus.control(s,1);
-	{Out.kr(~crtlLine, Line.kr(~sentArr[1], ~sentArr[0], dur: 1, mul: 1))};
 },
-
 '/BNOOSC/Sentiment/');
-
-//NOTEHASH
-// Take input into array
-~noteOn = 0;
-//Note Array
-//Scale Dictionary
+//)
+//(
+//Note Scraping
+~noteArr = Array.newClear(16);
+~noteArr = Array.fill(16, 1);
 ~scale = Dictionary.with(*[0->(5/3), 1->(15/8), 2->1, 3->(9/8), 4->(5/4), 5->(4/3), 6->(3/2)]);
-
-//~noteArr = Array.new(16);
-//~noteArr = Array.fill(16, 1);
-
-~noteHash = OSCFunc({ arg msg, time, addr, recvPort;
-	~noteOn = 1;
-	~val = msg[1];
-	~note.addFirst((~val.ascii.at(0)-64));
-	//Note Array
-	i = 0;
-	16.do({
-		// i.postln;
-		~noteArr[i] = ~scale.at(~note[i]);// * ~root;
-		i = i+1;
+~n=0;
+o = OSCFunc({ arg msg, time, addr, recvPort;
+		//[msg, time, addr, recvPort].postln;
+	~noteIn = msg[1];
+	~noteVal = ~scale.at((~noteIn.ascii.at(0)-65));
+	~noteArr[0] = ~noteVal;
+    	//16.do{
+	if(~n == 15, {
+	//~bells.reset;
+	~n = 0;
+	}, {
+		~noteArr[~n+1] = ~noteArr[~n];
+		~n = ~n+1;
+		"Note".postln;
+		~noteArr.postln;
 	});
-	~noteArr.postln;
 },
 '/BNOOSC/HashNote/');
+
+//SentimentLFO
+	~sentRate=[1, 1, 1];
+	~sentLine= Bus.control(s,1);
+	~sentGen = {Out.kr(~sentLine, Env.new(levels: ~sentArr*10, times: ~sentRate, curve: ~sentRate, loopNode: 3, releaseNode: 3))};
 )
-//Testing
-//~note.postln;
-//~noteArr.postln;
 
-//3. Trigger Note Generator, you may need to wait until NoteHash function has fired
-//TODO: add noteOn triggering to prevent errors at beginning of composition
-
-(
-~sentLine=Bus.control(s, 1);
-{Out.kr(~sentLine, Line.kr(~sentArr[0], ~sentArr[1], ~sentArr[2]))}.play;
-
-~root = 100;
+~noteArr.normalize;
+(//6. Load Pbind
+~root = 261;
 ~bells.stop;
 ~bells= Pbind(
 	\instrument, \PianoC3,
-	\pan, 0.9,
-	\dur, Prand([1, 2, 3] ,inf),
+	\pan, 0.5,
+	\dur, Prand([0.33] ,inf),
 	\fmAmt, Pfunc{~sentLine.asMap},
 	\oFreq, Prand(~noteArr * ~root, inf),
 	\aAmt, 0.08,
 ).play;
 )
-~noteArr;
+
+(
+~bells.stop;
+~bells.play;
+)
+~bells.reset;
