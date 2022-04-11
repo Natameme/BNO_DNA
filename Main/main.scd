@@ -1,13 +1,15 @@
 //1. Boot Server
 s.boot;
 
-(//2. SynthDef Load
-~path = PathName(thisProcess.nowExecutingPath).parentPath; //++"subFolder/"
+//2. SynthDef Load
+(
+~path = PathName(thisProcess.nowExecutingPath).parentPath;
 ~synthLib = (~path++"Synths/SynthLibrary.scd");
 ~synthLib.load;
 ServerTree.add(~lib_func);
 Synth(\PianoC3);
 )
+
 
 //3. Load python script in Terminal Window
 
@@ -26,17 +28,17 @@ o = OSCFunc({ arg msg, time, addr, recvPort;
 //)
 //(
 //Note Scraping
-~noteArr = Array.newClear(16);
-~noteArr = Array.fill(16, 1);
+~noteArr = Array.newClear(15);
+~noteArr = Array.fill(15, 1);
 ~scale = Dictionary.with(*[0->(5/3), 1->(15/8), 2->1, 3->(9/8), 4->(5/4), 5->(4/3), 6->(3/2)]);
 ~n=0;
 o = OSCFunc({ arg msg, time, addr, recvPort;
 		//[msg, time, addr, recvPort].postln;
 	~noteIn = msg[1];
-	~noteVal = ~scale.at((~noteIn.ascii.at(0)-65));
+	~noteVal = /*~scale.at*/((~noteIn.ascii.at(0)-65));
 	~noteArr[0] = ~noteVal;
     	//16.do{
-	if(~n == 15, {
+	if(~n == 14, {
 	//~bells.reset;
 	~n = 0;
 	}, {
@@ -54,6 +56,7 @@ o = OSCFunc({ arg msg, time, addr, recvPort;
 	~sentGen = {Out.kr(~sentLine, Env.new(levels: ~sentArr*10, times: ~sentRate, curve: ~sentRate, loopNode: 3, releaseNode: 3))};
 )
 
+//PBIND
 ~noteArr.normalize;
 (//6. Load Pbind
 ~root = 261;
