@@ -1,19 +1,19 @@
-//1. Boot Server
+/////////////////////////////////////
+//4. Boot Server
 s.boot;
-
-//2. SynthDef Load, Special Thanks to u/Seryth from r/SuperCollider
+/////////////////////////////////////
+//5. SynthDef Load, Special Thanks to u/Seryth from r/SuperCollider
 (
 ~path = PathName(thisProcess.nowExecutingPath).parentPath;
 ~synthLib = (~path++"Synths/SynthLibrary.scd");
 ~synthLib.load;
 ServerTree.add(~lib_func);
-Synth(\PianoC3);
 )
-
-
-//3. Load python script in Terminal Window
-
-(//4. Sentiment Scraping
+/////////////////////////////////////
+//test synth
+Synth(\fmSynth);
+/////////////////////////////////////
+(//6. Sentiment Scraping
 ~sentArr = Array.newClear(4);
 ~sentArr = Array.fill(4, 1);
 o = OSCFunc({ arg msg, time, addr, recvPort;
@@ -56,16 +56,16 @@ o = OSCFunc({ arg msg, time, addr, recvPort;
 },
 '/BNOOSC/HashNote/');
 )
+/////////////////////////////////////
 (
-//SentimentLFO
+//7. SentimentLFO
 	~sentRate=[1, 1, 1];
 	~sentLine= Bus.control(s,1);
     ~sentGen = {Out.kr(~sentLine, SinOsc.kr(1, 0, 5))};
 )
-
-
+/////////////////////////////////////
 //TODO: make this block of code trigger remotely when NoteScraper Fires
-(//6. Load Pbind
+(//8. Load Pbind
 ~root = 261;
 ~tempConst = 30;
 ~voice1.stop;
@@ -83,7 +83,7 @@ o = OSCFunc({ arg msg, time, addr, recvPort;
 	], inf),
 	\aAmt, 0.01,
 ).play;
-
+////////////
 ~voice2.stop;
 ~voice2= Pbind(
 	\instrument, \fmSynth,
@@ -99,7 +99,7 @@ o = OSCFunc({ arg msg, time, addr, recvPort;
 	], inf),
 	\aAmt, 0.03,
 ).play;
-
+////////////
 ~voice3.stop;
 ~voice3= Pbind(
 	\instrument, \harmonica,
