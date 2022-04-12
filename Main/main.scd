@@ -32,16 +32,16 @@ o = OSCFunc({ arg msg, time, addr, recvPort;
 ~noteArr  = Array.newClear(12);
 ~noteArr  = Array.fill(12, [0, 4, 7]);
 //dictionary definitions
-~chordScale = Dictionary.with(*[0->[0,4,7],1->[1,5,8],2->[2,5,9],3->[3,6,10],4->[4,6,11],5->[5,8,12],6->[6,8,12],7->[7,9,14],8->[8,12,15],9->[9,12,16],10->[10,14,17],11->[11,14,17]]);
-
+~chordScale = Dictionary.with(*[0->[0,4,7],1->[1,5,8],2->[2,5,9],3->[3,7,10],4->[4,7,11],5->[5,9,12],6->[6,9,12],7->[7,11,14],8->[8,12,15],9->[9,12,16],10->[10,14,17],11->[11,14,17]]);
 ~scale = Dictionary.with(*[
 	0->(1),1->(16/15),2->(9/4),3->(6/5),4->(5/4),5->(4/3),6->sqrt(2),7->(3/2),8->(8/5),9->(5/3),10->(9/5),11->(15/8),12->(2),13->(32/15),14->(9/4),15->(12/5),16->(5/2),17->(8/3)]);
+~n2deg = Dictionary.with(*['A'->9,'B'->11,'C'->0,'D'->2,'E'->4,'F'->5,'G'->7]);
 //n for conditional function
 ~n=0;
 o = OSCFunc({ arg msg, time, addr, recvPort;
 		//[msg, time, addr, recvPort].postln;
 	~noteIn = msg[1];
-	~noteVal = ~chordScale.at((~noteIn.ascii.at(0)-65));
+	~noteVal = ~chordScale.at(~n2deg.at(~noteIn));
 	~noteArr[0] = ~noteVal;
 	//for each value up to 11, place noteArr
 	if(~n == 11, {
