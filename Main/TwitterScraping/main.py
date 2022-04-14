@@ -43,7 +43,7 @@ count = 99
 client = SimpleUDPClient(ip, port)  # Create OSC client
 dispatcher = dispatcher.Dispatcher()
 server = osc_server.ThreadingOSCUDPServer((ip,port), dispatcher)
-server.serve_forever()
+#server.serve_forever()
 dispatcher.map("/filter", handler)
 analyzer = SentimentIntensityAnalyzer()
 
@@ -97,7 +97,9 @@ while True:
 
         thingsToLookFor += thingsForNoteScraper
 
-        query = ' OR '.join(thingsToLookFor)
+        #query = ' OR '.join(thingsToLookFor)
+        #query = 'Reece James OR Nacho OR Valverde OR peter walton OR Big Benz OR Iago OR Alaba OR Mason Mount OR #ريال_مدريد_تشيلسي OR Good Ebening OR (#BNODNA since_id:1511015009207336964) OR #As OR #Bs OR #Cs OR #Ds OR #Es OR #Fs OR #Gs'
+        query = 'Reece James OR Nacho OR Valverde OR peter walton OR Big Benz OR Iago OR Alaba OR Mason Mount OR Good Ebening OR #As OR #Bs OR #Cs OR #Ds OR #Es OR #Fs OR #Gs'
 
         while(len(query)>512):
             print("WARNING: query too long, taking hashtags off")
@@ -106,12 +108,19 @@ while True:
         query_return = twitter_api.search.tweets(q=query, count=count)
 
         search_results = query_return['statuses']
-
+        #print("QUERY")
+        #print(query)
+        #print("RESPONSE")
+        
         trendsQueryResults = {}
         scannerQueryResults = {}
         hashNoteQueryResults = {}
-    
+     
+        print(query)
+        print(len(search_results))
+        
         for search_result in search_results:
+            #print(search_result['text'][:20])
             for thingForTrends in thingsForTrends:
                 if thingForTrends in search_result['text']:
                     tweetsFoundForTrends += 1

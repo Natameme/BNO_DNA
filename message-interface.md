@@ -13,10 +13,10 @@ OSC messages contain
     * Address: "/BNOOSC/Sentiment/"
     * Content: float (pos), float (neu), float (neg), float (comp)
 
-* Every time someone hashtags something and the nessage (we could have our special hashtag like #BNODNA) that could trigger something.
+* Every time someone hashtags something and the nessage (with our special hashtag #BNODNA) that could trigger something. These messages are not expected to be detected very often and we can not rely on them being detected in realtime.
     * Address: "/BNOOSC/CustomHastag/"
     * Content: string (the hashtag itself, currently detecting #BNODNA), string (the rest of the text of the tweet)
 
-* Hashtaged "notes" every hour to see what chords appear (#F, #C, #Bb...) Although I expect there to be mostly #F for the meme, but who knows!
+* Hashtaged "notes" every hour to see what chords appear (#F, #C, #Bb...) Although I expect there to be mostly #F for the meme, but who knows! Also the sentiment analysis of the tweet.
     * Address: "/BNOOSC/HashNote/"
-    * Content: string (the note), string (the rest of the text in the tweet)
+    * Content: string (the note), string (the rest of the text in the tweet), float (positivity), float (neutrality), float (negativity), float (compound)

@@ -91,8 +91,8 @@ class WorldTrendManager:
         self.client.send_message("/BNOOSC/Sentiment/", \
              [self.sentiment['neg'], self.sentiment['neu'], self.sentiment['pos'],\
                   self.sentiment['compound']])
-        print("Sentiment Analysis fired " + str([self.sentiment['neg'], self.sentiment['neu'], self.sentiment['pos'],\
-                  self.sentiment['compound']]))
+        #print("Sentiment Analysis fired " + str([self.sentiment['neg'], self.sentiment['neu'], self.sentiment['pos'],\
+        #          self.sentiment['compound']]))
 
     def WorldTrendsInit(self):
         trend_names = []

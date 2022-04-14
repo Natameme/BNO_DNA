@@ -28,5 +28,5 @@ class CustomHashtagScanner:
                         print("INIT HASHTAG FOUND " + tweet['created_at'])
                     else:
                         self.client.send_message("/BNOOSC/CustomHashtag/", [self.customHashtag, tweet['text'].replace(self.customHashtag, '').strip()])
-                        print("Hashtag Scanner Fired")
+                        #print("Hashtag Scanner Fired")
                     
