@@ -1,6 +1,6 @@
 //Compilation of All of my Supercollider Synthdefs
 
-~lib_func = { //2.a click outside this parenthesis to add all to server
+~lib_func={
 //PBind Synths
 
 //////////
@@ -119,6 +119,7 @@ SynthDef(\harmonica,{
 	sig = Out.ar(out, Pan2.ar(((osc * ampEnv)+(hit*0.05)) * mVol, pan));
 }).add;
 
+(
 SynthDef(\PianoC3,{
 	arg out = 1, oFreq=160, aAmt=1, aAtk= 0.001, aDec= 5.98, hAmt=0.9, nAmt= 1, iAtk = 0.007, iDec=0.022, fFreq = 1000, pan= 0.5, mVol = 1.0, hVol = 0.01, gate=1;
 	var osc, ampEnv, hit, bow, filt, sig;
@@ -137,10 +138,6 @@ oFreq *	2.0023023791251	, oFreq *	3.00613967766692	, oFreq *	4.00767459708365	, 
 	filt = RLPF.ar(osc, fFreq);
 	sig = Out.ar(out, Pan2.ar((mVol * ((filt * ampEnv)) + (hit * hVol)), pan));
 }).add;
+)
 //end of addAll
 }
-
-
-
-
-

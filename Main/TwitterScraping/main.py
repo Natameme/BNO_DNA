@@ -16,8 +16,6 @@ import time
 import nltk
 nltk.download('vader_lexicon')
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
-from pythonosc import osc_server
-from pythonosc import dispatcher
 
 #import numpy as np
 
@@ -32,19 +30,18 @@ auth = twitter.oauth.OAuth(OAUTH_TOKEN, OAUTH_TOKEN_SECRET,
 
 twitter_api = twitter.Twitter(auth=auth)
 
-
-def handler(unused_addr, args, volume):
-    print(args)
-
 # Instantiate the OSC UDP client
 ip = "127.0.0.1"
 port = 57120
-count = 99
+count = 98
 client = SimpleUDPClient(ip, port)  # Create OSC client
+<<<<<<< HEAD
 dispatcher = dispatcher.Dispatcher()
 server = osc_server.ThreadingOSCUDPServer((ip,port), dispatcher)
 #server.serve_forever()
 dispatcher.map("/filter", handler)
+=======
+>>>>>>> f52c2acf83142d12b04ead432b788396e3c1e874
 analyzer = SentimentIntensityAnalyzer()
 
 trendsManager = WorldTrendManager(client, twitter_api, analyzer)
