@@ -28,7 +28,7 @@ Tonnetz {
 					);
 					"r".postln;
 				},
-				$l ,{ // moves the root down if major, 5th up if minor (e.g., C<->Em/B)
+				$l, { // moves the root down if major, 5th up if minor (e.g., C<->Em/B)
 					switch(chordQuality,
 						"Major", { chordIndices = ChordFunc.findIndices(currChord, 0);
 							chordIndices.do{ |index| currChord[index] = currChord[index] - 1 } },
