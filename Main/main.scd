@@ -49,11 +49,17 @@ o = OSCFunc({ arg msg, time, addr, recvPort;
 	}, {
 		~noteArr[~n+1] = ~noteArr[~n];
 		~n = ~n+1;
-		~noteScraped.value;
+		~noteScraped.value
 	});
 	//
 },
 '/BNOOSC/HashNote/');
+
+o = OSCFunc({ arg msg, time, addr, recvPort;
+		//[msg, time, addr, recvPort].postln;
+	//Structure of this message: 4 floats with sentiment analysis and one string with message itself
+},
+'/BNOOSC/TelegramMsg//');
 
 )
 /////////////////////////////////////

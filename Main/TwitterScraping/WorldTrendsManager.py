@@ -8,8 +8,8 @@ class WorldTrendManager:
     batch_size = 10
     standard_trends_size = 50
     sentiment = base_sentiment.copy()
-    def __init__(self, _client, _api, _analyzer):
-        self.client = _client
+    def __init__(self, _messageList, _api, _analyzer):
+        self.messageList = _messageList
         # Instantiate the sentiment analyzer
         self.analyzer = _analyzer
         self.api = _api
@@ -20,6 +20,8 @@ class WorldTrendManager:
         self.sentiment_keys=['neg', 'neu', 'pos', 'compound']
         self.update_every_base = 4
         self.update_countdown = self.update_every_base
+        self.randomSentiment = base_sentiment.copy()
+        self.randomWeight = 0.3
         
     
     def UpdateTrends(self):
@@ -74,8 +76,13 @@ class WorldTrendManager:
             for key in base_sentiment.keys():
                 if key!='count':
                     self.sentiment[key] /= self.sentiment['count']
+                    if self.randomSentiment['count'] > 0:
+                        self.sentiment[key] = self.sentiment[key] * (1 - self.randomWeight) + \
+                                        self.randomSentiment[key] * self.randomWeight / self.randomSentiment['count']
 
             self.sentiment['count'] = 1
+        
+        
 
     def AnalyzeTweets(self, hashtag_dict):
         for hashtag in hashtag_dict:
@@ -88,11 +95,10 @@ class WorldTrendManager:
             self.world_trends[hashtag] = sentiment
 
     def FireOSCMessage(self):
-        self.client.send_message("/BNOOSC/Sentiment/", \
+        self.messageList.put(("/BNOOSC/Sentiment/", \
              [self.sentiment['neg'], self.sentiment['neu'], self.sentiment['pos'],\
-                  self.sentiment['compound']])
-        #print("Sentiment Analysis fired " + str([self.sentiment['neg'], self.sentiment['neu'], self.sentiment['pos'],\
-        #          self.sentiment['compound']]))
+                  self.sentiment['compound']]))
+        
 
     def WorldTrendsInit(self):
         trend_names = []
@@ -101,5 +107,9 @@ class WorldTrendManager:
             trend_names.append(trend['name'])
         self.world_trends = dict.fromkeys(trend_names, \
             base_sentiment.copy())
-
+    
+    def SetRandomQueryResult(self, randomStreamSentiment):
+        for key in randomStreamSentiment.keys():
+            self.randomSentiment[key] += randomStreamSentiment[key]
+        self.randomSentiment['count'] += 1
     

@@ -11,8 +11,8 @@ class CustomHashtagScanner:
     #for status in statuses:
     #    print(status['text'])
  
-    def __init__(self, client):
-        self.client = client
+    def __init__(self, messageList):
+        self.messageList = messageList
 
 
     def ThingsToLookFor(self):
@@ -27,6 +27,6 @@ class CustomHashtagScanner:
                     if self.customHashtag in tweet['text'] and self.init_tweet_text in tweet['text']:
                         print("INIT HASHTAG FOUND " + tweet['created_at'])
                     else:
-                        self.client.send_message("/BNOOSC/CustomHashtag/", [self.customHashtag, tweet['text'].replace(self.customHashtag, '').strip()])
+                        self.messageList.put(("/BNOOSC/CustomHashtag/", [self.customHashtag, tweet['text'].replace(self.customHashtag, '').strip()]))
                         #print("Hashtag Scanner Fired")
                     
