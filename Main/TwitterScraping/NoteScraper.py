@@ -22,4 +22,4 @@ class NoteScraper:
                     [hashtag[1:], tweet['text'].replace(hashtag, '').strip(), 
                     polarity_scores['pos'], polarity_scores['neu'], polarity_scores['neg'],
                     polarity_scores['compound']])
-                print("Note Scraper Fired")
+                #print("Note Scraper Fired")
