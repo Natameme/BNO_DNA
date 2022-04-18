@@ -49,12 +49,12 @@ o = OSCFunc({ arg msg, time, addr, recvPort;
 	}, {
 		~noteArr[~n+1] = ~noteArr[~n];
 		~n = ~n+1;
-		"Note".postln;
-		~noteArr.postln;
+		~noteScraped.value;
 	});
 	//
 },
 '/BNOOSC/HashNote/');
+
 )
 /////////////////////////////////////
 (
@@ -63,9 +63,13 @@ o = OSCFunc({ arg msg, time, addr, recvPort;
 	~sentLine= Bus.control(s,1);
     ~sentGen = {Out.kr(~sentLine, SinOsc.kr(1, 0, 5))};
 )
+
+~noteArr.postln
 /////////////////////////////////////
-//TODO: make this block of code trigger remotely when NoteScraper Fires
 (//8. Load Pbind
+~noteScraped = {
+	"Note".postln;
+	~noteArr.postln;
 ~root = 261;
 ~tempConst = 30;
 ~voice1.stop;
@@ -115,6 +119,7 @@ o = OSCFunc({ arg msg, time, addr, recvPort;
 	], inf),
 	\mVol, 0.03,
 ).play;
+}
 )
 
 /*
