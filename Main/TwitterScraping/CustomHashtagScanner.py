@@ -16,8 +16,9 @@ class CustomHashtagScanner:
 
 
     def ThingsToLookFor(self):
-        return ['(' + self.customHashtag + ' since_id:' + str(self.since_id_hashtag) + ')'], \
-            [self.customHashtag]
+        #return ['(' + self.customHashtag + ' since_id:' + str(self.since_id_hashtag) + ')'], \
+        #    [self.customHashtag]
+        return [self.customHashtag], [self.customHashtag]
 
     def ReturnQuery(self, tweets):
         for hashtag in tweets:

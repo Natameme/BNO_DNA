@@ -5,7 +5,7 @@ base_sentiment = {'neg': 0.0, 'neu': 0.0, 'pos': 0.0, 'compound': 0.0, 'count': 
 
 class WorldTrendManager:
     current_batch = 1
-    batch_size = 10
+    batch_size = 5
     standard_trends_size = 50
     sentiment = base_sentiment.copy()
     def __init__(self, _messageList, _api, _analyzer):

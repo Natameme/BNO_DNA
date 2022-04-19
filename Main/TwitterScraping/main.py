@@ -76,7 +76,6 @@ def launchOSCHandler():
 def clientOSC():
     client = SimpleUDPClient(ip, port)
     while(True):
-        print(messageList.qsize())
         if not messageList.empty():
             item = messageList.get()
             client.send_message(item[0], item[1])
@@ -154,15 +153,19 @@ try:
             thingsToLookFor += thingsForNoteScraper
 
             query = ' OR '.join(thingsToLookFor)
+            #query = 'Flop of the Season OR Player of the Season OR Mark Harper OR Woippy OR Most Improved Player OR Taylor Lorenz OR Xenoblade 3 OR Wordle 305 OR WE LOVE YOU JUNGKOOK OR Priti Patel OR (#BNODNA since_id:0) OR #As OR #Bs OR #Cs OR #Ds OR #Es OR #Fs OR #Gs'
+            #query = 'Flop of the Season'
 
-            while(len(query)>512):
+            while(len(query)>128):
                 print("WARNING: query too long, taking hashtags off")
                 query = query[query.find(' OR ')+len(' OR '):]
             
             query_return = twitter_api.search.tweets(q=query, count=count)
-
-            search_results = query_return['statuses']
             
+            search_results = query_return['statuses']
+            #if(len(search_results)==0):
+            #    print(query)
+            #    print(query_return)
             trendsQueryResults = {}
             scannerQueryResults = {}
             hashNoteQueryResults = {}
