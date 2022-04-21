@@ -57,8 +57,8 @@ o = OSCFunc({ arg msg, time, addr, recvPort;
 		Tonnetz(~noteArr[0], ~noteArr[9]).transform(\p);
 		Tonnetz(~noteArr[0], ~noteArr[10]).transform(\p);
 		Tonnetz(~noteArr[0], ~noteArr[11]).transform(\p);
-			"Tonnetz".postln;//for debugging
-			~noteArr.postln;//for debugging
+			//"Tonnetz".postln;//for debugging
+			//~noteArr.postln;//for debugging
 			~notePlay.value;//re-trigger function
 		}, {//r transform
 			if(~sentArr[3] > 0.0, {
@@ -73,8 +73,8 @@ o = OSCFunc({ arg msg, time, addr, recvPort;
 		Tonnetz(~noteArr[0], ~noteArr[9]).transform(\r);
 		Tonnetz(~noteArr[0], ~noteArr[10]).transform(\r);
 		Tonnetz(~noteArr[0], ~noteArr[11]).transform(\r);
-			"Tonnetz".postln;//for debugging
-			~noteArr.postln;//for debugging
+			//"Tonnetz".postln;//for debugging
+			//~noteArr.postln;//for debugging
 			~notePlay.value;//re-trigger function
 			}, {//l transform
 		if(~sentArr[3] > -1, {
@@ -89,8 +89,8 @@ o = OSCFunc({ arg msg, time, addr, recvPort;
 		Tonnetz(~noteArr[0], ~noteArr[9]).transform(\l);
 		Tonnetz(~noteArr[0], ~noteArr[10]).transform(\l);
 		Tonnetz(~noteArr[0], ~noteArr[11]).transform(\l);
-			"Tonnetz".postln;//for debugging
-			~noteArr.postln;//for debugging
+			//"Tonnetz".postln;//for debugging
+					~noteArr.postln;//for debugging
 			~notePlay.value;//re-trigger function
 		})})});
 	//resend values to ~sentiment LFO
@@ -186,7 +186,7 @@ o = OSCFunc({ arg msg, time, addr, recvPort;
 o = OSCFunc({ arg msg, time, addr, recvPort;
 	//[msg, time, addr, recvPort].postln;//for Debugging
 	~noteIn = msg[1];
-	//msg[1].postln;// for Debugging
+	msg[1].postln;// for Debugging
 	~noteVal = ~chordScale.at(~n2deg.at(~noteIn));
 	//"Note Value:".postln;//for debugging
 	//~noteVal.postln;//for debugging
