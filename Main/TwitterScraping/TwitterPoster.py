@@ -42,10 +42,14 @@ class TwitterPoster:
 
     def ScheduledPublish(self):
         while True:
+            if self.tweetQueue.qsize()>100:
+                for i in range(50):
+                    self.tweetQueue.get()
             if not self.tweetQueue.empty():
                 tweet = self.tweetQueue.get().item
-                self.publish(tweet)
-                time.sleep(4.5)
+                #self.publish(tweet)
+                print(tweet)
+                time.sleep(1)
             time.sleep(0.5)
     
     def join(self):

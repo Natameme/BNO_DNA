@@ -79,8 +79,8 @@ def clientOSC():
         if not messageList.empty():
             item = messageList.get()
             client.send_message(item[0], item[1])
-            print(item[0])
-            print(item[1])
+            #print(item[0])
+            #print(item[1])
         time.sleep(1)
 
 #OSCServerThread = Thread(target=launchOSCHandler)
@@ -157,7 +157,7 @@ try:
             #query = 'Flop of the Season'
 
             while(len(query)>128):
-                print("WARNING: query too long, taking hashtags off")
+                #print("WARNING: query too long, taking hashtags off")
                 query = query[query.find(' OR ')+len(' OR '):]
             
             query_return = twitter_api.search.tweets(q=query, count=count)
@@ -204,9 +204,15 @@ try:
             
             if len(trendsQueryResults.keys())>0:
                 poster.addToQueue(random.choice(trendsQueryResults[random.choice(list(trendsQueryResults.keys()))])['text'])
+                if len(trendsQueryResults.keys())>15:
+                    poster.addToQueue(random.choice(trendsQueryResults[random.choice(list(trendsQueryResults.keys()))])['text'])
+                    if len(trendsQueryResults.keys())>50:
+                            poster.addToQueue(random.choice(trendsQueryResults[random.choice(list(trendsQueryResults.keys()))])['text'])
 
             if len(scannerQueryResults.keys())>0:
                 poster.addToQueue(random.choice(scannerQueryResults[random.choice(list(scannerQueryResults.keys()))])['text'])
+                if len(scannerQueryResults.keys())>10:
+                    poster.addToQueue(random.choice(scannerQueryResults[random.choice(list(scannerQueryResults.keys()))])['text'])
             
             if len(hashNoteQueryResults.keys())>0:
                 poster.addToQueue(random.choice(hashNoteQueryResults[random.choice(list(hashNoteQueryResults.keys()))])['text'])
@@ -225,5 +231,5 @@ except KeyboardInterrupt:
     #OSCServerThread.join()
     OSCClientThread.join()
     poster.join()
-    botThread.join()
+    #botThread.join()
     exit()
