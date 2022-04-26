@@ -251,13 +251,18 @@ o = OSCFunc({ arg msg, time, addr, recvPort;
 ~notePlay = {
 ~root = 261;
 ~tempConst = 60 * (~sentArr[3]+1);
+//Tempo Clocks
 ~posiClock = TempoClock(~sentArr[0].abs*~tempConst);
 ~negaClock = TempoClock(~sentArr[1].abs*~tempConst);
 ~neutClock = TempoClock(~sentArr[2].abs*~tempConst);
+//synth prob weight arrays
+~v1arr= [~sentArr[0], ~sentArr[1], ~sentArr[2]].normalizeSum;
+~v2arr= [~sentArr[0], ~sentArr[3]].normalizeSum;
+~v3arr= [~sentArr[1], ~sentArr[2], ~sentArr[3]].normalizeSum;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ~voice1.stop;
 Pdef(\v1, ~voice1 = Pbind(
-		\instrument, Pwrand([\Guitar, \PianoC3, \singingBowl], [0.7, 0.1, 0.2], inf),
+		\instrument, Pwrand([\Guitar, \PianoC3, \singingBowl], ~v1arr, inf),
 	\pan, Pfunc{~sentLineOne.asMap},
 		\fFreq, Pwhite(800, 1000, inf),
 	\aAtk, 0.01,
@@ -269,12 +274,12 @@ Pdef(\v1, ~voice1 = Pbind(
 		Pseq([~scale.at(~noteArr[6][0]), ~scale.at(~noteArr[6][1]),~scale.at(~noteArr[6][2])] * ~root,1),
 		Pseq([~scale.at(~noteArr[9][0]), ~scale.at(~noteArr[9][1]),~scale.at(~noteArr[9][2])] * ~root,1)
 	], inf),
-	\mVol, 0.03,
+	\mVol, 0.033,
 )).play;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ~voice2.stop;
 Pdef(\v2, ~voice2 = Pbind(
-	\instrument, Pwrand([\Guitar, \PianoC3], [0.4, 0.6], inf),
+	\instrument, Pwrand([\Guitar, \PianoC3], ~v2arr, inf),
 	\pan, Pfunc{~sentLineTwo.asMap},
 	\fFreq, Pwhite(400, 600, inf),
 	\aAtk, 0.001,
@@ -286,16 +291,16 @@ Pdef(\v2, ~voice2 = Pbind(
 		Pseq([~scale.at(~noteArr[7][0]),~scale.at(~noteArr[7][1]),~scale.at(~noteArr[7][2])]    * (~root/4),1),
 		Pseq([~scale.at(~noteArr[10][0]),~scale.at(~noteArr[10][1]),~scale.at(~noteArr[10][2])] * (~root/4),1)
 		], inf),
-	\mVol, 0.5,
+	\mVol, 0.4,
 	)).play;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ~voice3.stop;
  Pdef(\v3, ~voice3 = Pbind(
-	\instrument, Pwrand([\flue, \fmSynth, \harmonica], [0.33, 0.34, 0.33], inf),
+	\instrument, Pwrand([\flue, \fmSynth, \harmonica], ~v3arr, inf),
 	\pan, Pfunc{~sentLineTre.asMap},
 	\aAtk, 3,
 	\dur, ~neutClock.tempo*2,
-	//\fmAmt, Pfunc{~sentLineFor.asMap},
+	\fmAmt, Pfunc{~sentLineFor.asMap},
 	\oFreq, Prand([
 		Prand([~scale.at(~noteArr[2][0]),~scale.at(~noteArr[2][1]),~scale.at(~noteArr[2][2])]    * (~root/2)  ,1),
 		Prand([~scale.at(~noteArr[5][0]),~scale.at(~noteArr[5][1]),~scale.at(~noteArr[5][2])]    * (~root/2)  ,1),
