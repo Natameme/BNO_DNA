@@ -29,21 +29,34 @@ from TelegramBot import *
 
 #import numpy as np
 
-# Instantiate the twitter api client
-#CONSUMER_KEY = 'OWAwcOfkzNSlIBGhAtQdNY4Im'
-#CONSUMER_SECRET = '14iE08KZpZx44b4B0WfoAqvOPF7kXNdzkkv7fmXreqKb1fCzMc'
-#OAUTH_TOKEN = '1350156541282889729-H02Tl1JLxqSjijz9pSgGapt2yshGIW'
-#OAUTH_TOKEN_SECRET = 'AEAAnbmcA75WHHjXUOButwwjE2ZzSLy4H5S7XfnHHZFvm'
+## KEYS for Juan's account
+
+#API_KEY = 'OWAwcOfkzNSlIBGhAtQdNY4Im'
+#API_KEY_SECRET = '14iE08KZpZx44b4B0WfoAqvOPF7kXNdzkkv7fmXreqKb1fCzMc'
+#ACCESS_TOKEN = '1350156541282889729-H02Tl1JLxqSjijz9pSgGapt2yshGIW'
+#ACCESS_TOKEN_SECRET = 'AEAAnbmcA75WHHjXUOButwwjE2ZzSLy4H5S7XfnHHZFvm'
 #BEARER_TOKEN = 'AAAAAAAAAAAAAAAAAAAAANMUZwEAAAAAhXSpl9O1vl8lX8n070X%2FUNV7cuc%3DoB2hOYYIle3sLXpadsgXa9UaWF5IyyfgLgDruApTqhvwWQuvBl'
 
-API_KEY = 'aAfQM9o1ImAcFQ447YJnA722Y'
-API_KEY_SECRET = 'QRLu7XVozilwKjrxFjImACAswr5yrlSpCd85dLxwc3wyduYqTm'
-BEARER_TOKEN = 'AAAAAAAAAAAAAAAAAAAAAHx1bgEAAAAAf5xF3NRIrS6gdx3NLe9Z4by8i84%3DtWDBFdk8hP5CjGYiVuDdxlEwhldo2EA0xNsMWmoLkmQp4JfkS2'
-ACCESS_TOKEN = '1515914358739640321-7fs1KGnw2W9i9Yn85qziDDAYWlxGRR'
-ACCESS_TOKEN_SECRET = 'ovTaAfKUqCZRtQ22UoXZzKuDayavsbZZV2KVrSUawC6XE'
-CLIENT_ID = 'enZ1dE56dU1iTWlWQVd0bmpMYlk6MTpjaQ'
-CLIENT_ID_SECRET = 'YR78CWF8jt86oCp0E15olqVtkDI0dZ5Gx9J9U-EoE7VkVvYoHM'
+## Keys for old account (restricted)
+#API_KEY = 'aAfQM9o1ImAcFQ447YJnA722Y'
+#API_KEY_SECRET = 'QRLu7XVozilwKjrxFjImACAswr5yrlSpCd85dLxwc3wyduYqTm'
+#BEARER_TOKEN = 'AAAAAAAAAAAAAAAAAAAAAHx1bgEAAAAAf5xF3NRIrS6gdx3NLe9Z4by8i84%3DtWDBFdk8hP5CjGYiVuDdxlEwhldo2EA0xNsMWmoLkmQp4JfkS2'
+#ACCESS_TOKEN = '1515914358739640321-7fs1KGnw2W9i9Yn85qziDDAYWlxGRR'
+#ACCESS_TOKEN_SECRET = 'ovTaAfKUqCZRtQ22UoXZzKuDayavsbZZV2KVrSUawC6XE'
+#CLIENT_ID_SECRET = 'YR78CWF8jt86oCp0E15olqVtkDI0dZ5Gx9J9U-EoE7VkVvYoHM'
+#CLIENT_ID = 'enZ1dE56dU1iTWlWQVd0bmpMYlk6MTpjaQ'
 
+## Keys for new account (let's hope non restricted)
+API_KEY = 'zaVQhC0lFawTgESm31n2XuvfE'
+API_KEY_SECRET = 'zJXf8SYXHCo7DhWpSminWTcuiBYpwUMGgW9OLfUKhg4qujmNrp'
+BEARER_TOKEN = 'AAAAAAAAAAAAAAAAAAAAAPdKcAEAAAAA5NGBPbaQ7z5T%2FjRVchE455ickKQ%3Dc2JrqKNpnIiWoIpXGdA8hKcVuQDyShFbBLezWpbwysN4x8YMaX'
+ACCESS_TOKEN = '1520480617556754440-NjihxvN8uaFxrpscMjQMhxt9etFDxr'
+ACCESS_TOKEN_SECRET = 'Bf3Q6z77MmpF1NEOGLAY3DFMGkl7maZn1hYjMKZSMw6On'
+CLIENT_SECRET = 'fbI5WSbrbXcKTWfAUruBfFdeH-rHDpLUD6wnjlgLJAPVHuVhYD'
+CLIENT_ID_SECRET = 'fbI5WSbrbXcKTWfAUruBfFdeH-rHDpLUD6wnjlgLJAPVHuVhYD'
+CLIENT_ID = 'RzFmUFdaVE82Zm5BVWtwaEx5VXA6MTpjaQ'
+
+# Instantiate the twitter api client
 auth = twitter.oauth.OAuth(ACCESS_TOKEN, ACCESS_TOKEN_SECRET,
                            API_KEY, API_KEY_SECRET)
 
@@ -79,8 +92,8 @@ def clientOSC():
         if not messageList.empty():
             item = messageList.get()
             client.send_message(item[0], item[1])
-            #print(item[0])
-            #print(item[1])
+            print(item[0])
+            print(item[1])
         time.sleep(1)
 
 #OSCServerThread = Thread(target=launchOSCHandler)

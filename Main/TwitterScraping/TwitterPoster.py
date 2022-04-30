@@ -10,7 +10,7 @@ class PrioritizedItem:
     item: Any=field(compare=False)
 
 class TwitterPoster:
-    def __init__(self, consumer_key, consumer_secret, access_token, access_token_secret):
+    def __init__(self, consumer_key, consumer_secret, access_token, access_token_secret, delete_mentions = True, total_cooldown_to_tweet = 38):
         auth = tweepy.OAuthHandler(
             consumer_key,
             consumer_secret
@@ -22,10 +22,16 @@ class TwitterPoster:
         self.api = tweepy.API(auth)
         self.tweetQueue = queue.PriorityQueue()
         self.thread = None
+
+        self.delete_mentions = delete_mentions
+        self.cooldown = total_cooldown_to_tweet
+        self.total_cooldown_to_tweet = total_cooldown_to_tweet
     
         
     
     def publish(self, tweet):
+        if self.delete_mentions:
+            tweet = tweet.replace('@', '')
         try:
             status = self.api.update_status(status=tweet)
         except Exception as exc:
@@ -47,10 +53,13 @@ class TwitterPoster:
                     self.tweetQueue.get()
             if not self.tweetQueue.empty():
                 tweet = self.tweetQueue.get().item
-                #self.publish(tweet)
                 print(tweet)
-                time.sleep(1)
-            time.sleep(0.5)
+                if self.cooldown > self.total_cooldown_to_tweet:
+                    self.cooldown=0
+                    self.publish(tweet)
+            self.cooldown += 1
+            time.sleep(1)
+            
     
     def join(self):
         self.thread.join()
