@@ -8,7 +8,7 @@
 	//////////
 
 	SynthDef(\fmSynth,{
-		arg out=0, oFreq=100, fmMult = 1, aAmt=0.3, fmAmt=1, aAtk= 0.4, aDec=4, fmAtk = 0.1, fmDec = 0.2, pan=0.5, mVol = 1.0, gate=1;
+		arg out=0, oFreq=100, fmMult = 1, aAmt=0.3, fmAmt=1, aAtk= 0.4, aDec=4, fmAtk = 0.1, fmDec = 0.2, pan=0, mVol = 1.0, gate=1;
 		var osc, ampEnv, fmEnv, sig;
 		osc = SinOsc.ar(oFreq, SinOsc.ar((oFreq * fmMult), 0, fmAmt), mul: 1);
 		ampEnv = EnvGen.kr(Env.new([0,aAmt,0], [aAtk,aDec]), gate, doneAction: 2);
@@ -16,48 +16,11 @@
 		sig = Out.ar(out, Pan2.ar((osc * ampEnv) * mVol, pan));
 	}).add;
 
-	SynthDef(\fmSynth2,{ // changed oFreq to freq so that it would work with midinote
-		arg out=0, freq=100, fmMult = 1, aAmt=0.3, fmAmt=1, aAtk= 0.4, aDec=4, fmAtk = 0.1, fmDec = 0.2, pan=0.5, mVol = 1.0, gate=1;
-		var osc, ampEnv, fmEnv, sig;
-		osc = SinOsc.ar(freq, SinOsc.ar((freq * fmMult), 0, fmAmt), mul: 1);
-		ampEnv = EnvGen.kr(Env.new([0,aAmt,0], [aAtk,aDec]), gate, doneAction: 2);
-		fmEnv = EnvGen.kr(Env.new([0,1,0], fmAtk, fmDec), gate);
-		sig = Out.ar(out, Pan2.ar((osc * ampEnv) * mVol, pan));
-	}).add;
-
-
-	///////////
-	//SAW Synth
-	///////////
-	SynthDef(\sawSynth,{
-		arg out= 1, oFreq=100, fFreq = 1000, fRes = 1, aAmt=1, aAtk= 0.01, aDec= 4, aSus = 0.5, aRel = 3, fAmt = 2, fAtk = 0.01, fDec = 0.5, fSus= 0.5, fRel= 3, pan= 0.5, mVol = 1.0, gate=1;
-		var osc, ampEnv, fEnv, sig;
-		ampEnv = EnvGen.kr(Env.new([0,aAmt,aSus,0], [aAtk,aDec, aRel]), gate, doneAction: 2);
-		fEnv = EnvGen.kr(Env.new([1,fAmt, fSus,1], [fAtk, fDec, fRel]), gate, doneAction: 0);
-		osc = RLPF.ar(Saw.ar(oFreq, mul: 1), fFreq * fEnv, fRes, 1.0);
-		sig = Out.ar(out, Pan2.ar((osc * ampEnv) * mVol, pan));
-	}).add;
-
-
-
-	//////////////
-	//Square Synth
-	//////////////
-
-	SynthDef(\pulseSynth,{
-		arg out= 1, oFreq=100, fFreq = 1000, fRes = 1, aAmt=1, aAtk= 0.01, aDec=0.5, aSus = 0.5, aRel = 3, fAmt= 2, fAtk = 0.01, fDec = 0.5, fSus= 0.5, fRel= 3, pWidth= 0.5, pan= 0.5, mVol = 1.0, gate=1;
-		var osc, ampEnv, fEnv, sig;
-		ampEnv = EnvGen.kr(Env.new([0,aAmt,aSus,0], [aAtk,aDec,aRel]), gate, doneAction: 2);
-		fEnv = EnvGen.kr(Env.new([1,fAmt,fSus,1], [fAtk, fDec, fRel]), gate, doneAction: 0);
-		osc = RLPF.ar(Pulse.ar(oFreq, pWidth, mul: 1), fFreq * fEnv, fRes, 1.0);
-		sig = Out.ar(out, Pan2.ar((osc * ampEnv) * mVol, pan));
-	}).add;
-
 	/////////////
 	//Boomwhacker
 	/////////////
 	SynthDef(\boomWhacker,{
-		arg out= 1, oFreq=100, fFreq = 1000, fRes = 1, aAmt=0.1, aAtk= 0.001, aDec= 1, hAmt=0.001, nAmt= 0.05, iAtk = 0.007, iDec=0.09, pan= 0.5, mVol = 1.0, gate=1;
+		arg out= 1, oFreq=100, fFreq = 1000, fRes = 1, aAmt=0.1, aAtk= 0.001, aDec= 10, hAmt=0.001, nAmt= 0.05, iAtk = 0.007, iDec=0.09, pan= 0, mVol = 1.0, gate=1;
 		var osc, ampEnv, hit, sig;
 		ampEnv = EnvGen.kr(Env.new([0,1,0], [aAtk,aDec]), gate, doneAction: 2);
 		hit = SinOsc.ar(XLine.kr(5000, 400, iDec), 0, XLine.kr(aAmt, 0, iDec)) + WhiteNoise.ar(XLine.kr(nAmt*2, 0, iDec));
@@ -81,7 +44,7 @@
 	//////////////
 
 	SynthDef(\singingBowl,{
-		arg out = 1, oFreq=569.5, aAmt=1, aAtk= 0.001, aDec= 5.98, hAmt=0.9, nAmt= 1, iAtk = 0.007, iDec=0.022, fFreq = 10000, pan= 0.5, mVol = 1.0, hVol = 0.01, gate=1;
+		arg out = 1, oFreq=569.5, aAmt=1, aAtk= 0.001, aDec= 5.98, hAmt=0.9, nAmt= 1, iAtk = 0.007, iDec=0.022, fFreq = 10000, pan= 0, mVol = 1.0, hVol = 0.01, gate=1;
 		var osc, ampEnv, hit, bow, filt, sig;
 		ampEnv = EnvGen.kr(Env.new([0,aAmt,0], [aAtk,aDec]), gate, doneAction: 2);
 		hit = SinOsc.ar(XLine.kr(900, 128, iDec), 0, XLine.kr(hAmt, 0, iDec));
@@ -114,7 +77,7 @@
 
 
 	SynthDef(\harmonica,{
-		arg out= 1, oFreq=1050, fFreq = 500, fRes = 1, aAmt=1, aSus = 0.05, aRel = 1.75, aAtk= 0.1, aDec= 1, iDec=0.09, pan= 0.5, mVol = 1.0, gate=1;
+		arg out= 1, oFreq=1050, fFreq = 500, fRes = 1, aAmt=1, aSus = 0.05, aRel = 1.75, aAtk= 0.1, aDec= 1, iDec=0.09, pan= 0, mVol = 1.0, gate=1;
 		var osc, ampEnv, hit, sig;
 		ampEnv = EnvGen.kr(Env.new([0,aAmt, aSus, 0], [aAtk, aDec, aRel]), gate, doneAction: 2);
 		hit = RLPF.ar(WhiteNoise.ar(ampEnv), fFreq, 1, 1);
@@ -131,7 +94,7 @@
 	//Guitar
 
 	SynthDef(\Guitar,{
-		arg out = 1, oFreq=138, aAmt=1, aAtk= 0.0002, aDec= 5.98, hAmt=1, nAmt= 0.2, iAtk = 0.017, iDec=0.00005, fFreq = 2000, pan= 0.5, mVol = 0.5, hVol = 3, gate=1;
+		arg out = 1, oFreq=138, aAmt=1, aAtk= 0.0002, aDec= 5.98, hAmt=1, nAmt= 0.2, iAtk = 0.017, iDec=0.00005, fFreq = 2000, pan= 0, mVol = 0.5, hVol = 3, gate=1;
 		var osc, ampEnv, impEnv, hit, bow, pick, filt, sig;
 		ampEnv = EnvGen.kr(Env.new([0,aAmt,0], [aAtk,aDec]), gate, doneAction: 2);
 		impEnv = EnvGen.kr(Env.new([0, hVol, 0], [iAtk, iDec]));
@@ -303,7 +266,7 @@
 
 	(
 		SynthDef(\PianoC3,{
-			arg out = 1, oFreq=160, aAmt=0.05, aAtk= 0.001, aDec= 5.98, hAmt=0.9, nAmt= 1, iAtk = 0.007, iDec=0.022, fFreq = 1000, pan= 0.5, mVol = 1.0, hVol = 0.01, gate=1;
+			arg out = 1, oFreq=160, aAmt=0.05, aAtk= 0.001, aDec= 5.98, hAmt=0.9, nAmt= 1, iAtk = 0.007, iDec=0.022, fFreq = 1000, pan= 0, mVol = 1.0, hVol = 0.01, gate=1;
 			var osc, ampEnv, hit, bow, filt, sig;
 			ampEnv = EnvGen.kr(Env.new([0,aAmt,0], [aAtk,aDec]), gate, doneAction: 2);
 			hit = SinOsc.ar(XLine.kr(900, 128, iDec), 0, XLine.kr(hAmt, 0, iDec));
@@ -398,9 +361,152 @@
 				10	,
 				10	,
 				10	]], hit);
-			filt = FreeVerb.ar(osc, 0.5, 1, 0.1, 1);
+			filt = LPF.ar(FreeVerb.ar(osc, 0.5, 1, 0.1, 1), fFreq);
 			sig = Out.ar(out, Pan2.ar((mVol * ((filt * ampEnv)) + (hit * hVol)), pan));
 		}).add;
+
+		SynthDef(\flue,{
+	arg out = 1, oFreq=240, aAmt=1, aAtk= 0.2, aDec= 5.98, hAmt=0.9, nAmt= 0.1, iAtk = 0.7, iDec=0.022, fFreq = 10000, pan= 0.5, mVol = 0.5, hVol = 0.1, gate=1;
+	var osc, bosc, ampEnv, tone, hit, bow, filt, sig;
+	ampEnv = EnvGen.kr(Env.new([0,aAmt,0], [aAtk,aDec]), gate, doneAction: 2);
+	bow = WhiteNoise.ar(nAmt);
+	tone = Saw.ar(oFreq, mul: 0.012);
+	hit = SinOsc.ar(XLine.kr(5000, 400, iDec), 0, XLine.kr(aAmt, 0, iDec)) + WhiteNoise.ar(XLine.kr(nAmt*2, 0, iDec));
+	osc = Klang.ar(`[[//FREQUENCIES
+		oFreq *	1	,
+oFreq *	1.98900169204738	,
+oFreq *	2.98815566835871	,
+oFreq *	3.98434856175973	,
+oFreq *	4.97884940778342	,
+oFreq *	5.96446700507614	,
+oFreq *	6.40862944162437	,
+oFreq *	6.96277495769882	,
+oFreq *	7.94839255499154	,
+oFreq *	8.94670050761421	,
+oFreq *	9.93231810490694	,
+oFreq *	10.9348561759729	,
+oFreq *	11.9204737732657	,
+oFreq *	12.9230118443316	,
+oFreq *	13.917089678511	,
+oFreq *	14.919627749577	,
+oFreq *	15.9052453468697	,
+oFreq *	16.8950930626058	,
+oFreq *	17.8891708967851	,
+oFreq *	19.7123519458545	,
+oFreq *	19.8900169204738	],
+	[//AMPLITUDES
+1	,
+0.211348903983665	,
+0.630957344480194	,
+0.0543250331492433	,
+0.3019951720402	,
+0.0506990708274704	,
+0.00582103217770871	,
+0.0966050878989812	,
+0.0213796208950223	,
+0.0285101826750391	,
+0.0305492111321551	,
+0.0186208713666286	,
+0.0609536897240168	,
+0.0263026799189537	,
+0.0171790838715759	,
+0.00616595001861481	,
+0.0162181009735893	,
+0.0186208713666286	,
+0.0171790838715759	,
+0.0221309470960564	,
+0.0144543977074593	],
+	[//LENGTHS
+1	,
+1	,
+1	,
+1	,
+1	,
+1	,
+1	,
+1	,
+1	,
+1	,
+1	,
+1	,
+1	,
+1	,
+1	,
+1	,
+1	,
+1	,
+1	,
+1	,
+		1	]], );
+bosc = Klank.ar(`[[//FREQUENCIES
+		oFreq *	1	,
+oFreq *	1.98900169204738	,
+oFreq *	2.98815566835871	,
+oFreq *	3.98434856175973	,
+oFreq *	4.97884940778342	,
+oFreq *	5.96446700507614	,
+oFreq *	6.40862944162437	,
+oFreq *	6.96277495769882	,
+oFreq *	7.94839255499154	,
+oFreq *	8.94670050761421	,
+oFreq *	9.93231810490694	,
+oFreq *	10.9348561759729	,
+oFreq *	11.9204737732657	,
+oFreq *	12.9230118443316	,
+oFreq *	13.917089678511	,
+oFreq *	14.919627749577	,
+oFreq *	15.9052453468697	,
+oFreq *	16.8950930626058	,
+oFreq *	17.8891708967851	,
+oFreq *	19.7123519458545	,
+oFreq *	19.8900169204738	],
+	[//AMPLITUDES
+1	,
+0.211348903983665	,
+0.630957344480194	,
+0.0543250331492433	,
+0.3019951720402	,
+0.0506990708274704	,
+0.00582103217770871	,
+0.0966050878989812	,
+0.0213796208950223	,
+0.0285101826750391	,
+0.0305492111321551	,
+0.0186208713666286	,
+0.0609536897240168	,
+0.0263026799189537	,
+0.0171790838715759	,
+0.00616595001861481	,
+0.0162181009735893	,
+0.0186208713666286	,
+0.0171790838715759	,
+0.0221309470960564	,
+0.0144543977074593	],
+	[//LENGTHS
+1	,
+1	,
+1	,
+1	,
+1	,
+1	,
+1	,
+1	,
+1	,
+1	,
+1	,
+1	,
+1	,
+1	,
+1	,
+1	,
+1	,
+1	,
+1	,
+1	,
+		1	]], input: tone*0.8 + (bow/8) );
+	filt = RLPF.ar(/*(osc*0.8)+*/(bosc*0.7), fFreq);
+	sig = Out.ar(out, Pan2.ar((mVol * ((filt * ampEnv))), pan));
+}).add;
 )
 	//end of addAll
 }

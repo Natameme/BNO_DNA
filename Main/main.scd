@@ -14,7 +14,7 @@ s.boot;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //5a. Test Synths
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Synth(\Guitar);
+Synth(\PianoC3);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //7. Sentiment Scraping
 ~scraper.value;
@@ -250,15 +250,21 @@ o = OSCFunc({ arg msg, time, addr, recvPort;
 //(
 ~notePlay = {
 ~root = 261;
-~tempConst = 120 * (~sentArr[3]+1);
+~tempConst = 60 * (~sentArr[3]+1);
+//Tempo Clocks
 ~posiClock = TempoClock(~sentArr[0].abs*~tempConst);
 ~negaClock = TempoClock(~sentArr[1].abs*~tempConst);
 ~neutClock = TempoClock(~sentArr[2].abs*~tempConst);
+//synth prob weight arrays
+~v1arr= [~sentArr[0], ~sentArr[1], ~sentArr[2]].normalizeSum;
+~v2arr= [~sentArr[0], ~sentArr[3]].normalizeSum;
+~v3arr= [~sentArr[1], ~sentArr[2], ~sentArr[3]].normalizeSum;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ~voice1.stop;
 Pdef(\v1, ~voice1 = Pbind(
-	\instrument, \PianoC3,
+		\instrument, Pwrand([\Guitar, \PianoC3, \singingBowl], ~v1arr, inf),
 	\pan, Pfunc{~sentLineOne.asMap},
+		\fFreq, Pwhite(800, 1000, inf),
 	\aAtk, 0.01,
 	\aDec, 5,
 	\dur, ~posiClock.tempo,
@@ -268,28 +274,29 @@ Pdef(\v1, ~voice1 = Pbind(
 		Pseq([~scale.at(~noteArr[6][0]), ~scale.at(~noteArr[6][1]),~scale.at(~noteArr[6][2])] * ~root,1),
 		Pseq([~scale.at(~noteArr[9][0]), ~scale.at(~noteArr[9][1]),~scale.at(~noteArr[9][2])] * ~root,1)
 	], inf),
-	\mVol, 0.07,
-)).play(~posiClock);
+	\mVol, 0.033,
+)).play;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ~voice2.stop;
 Pdef(\v2, ~voice2 = Pbind(
-	\instrument, \Guitar,
+	\instrument, Pwrand([\Guitar, \PianoC3], ~v2arr, inf),
 	\pan, Pfunc{~sentLineTwo.asMap},
-	\aAtk, 0.01,
+	\fFreq, Pwhite(400, 600, inf),
+	\aAtk, 0.001,
 	\aDec, 5,
 	\dur, ~negaClock.tempo,
 	\oFreq, Prand([
-		Pseq([~scale.at(~noteArr[1][0]),~scale.at(~noteArr[1][1]),~scale.at(~noteArr[1][2])]    * (~root/2),1),
-		Pseq([~scale.at(~noteArr[4][0]),~scale.at(~noteArr[4][1]),~scale.at(~noteArr[4][2])]    * (~root/2),1),
-		Pseq([~scale.at(~noteArr[7][0]),~scale.at(~noteArr[7][1]),~scale.at(~noteArr[7][2])]    * (~root/2),1),
-		Pseq([~scale.at(~noteArr[10][0]),~scale.at(~noteArr[10][1]),~scale.at(~noteArr[10][2])] * (~root/2),1)
+		Pseq([~scale.at(~noteArr[1][0]),~scale.at(~noteArr[1][1]),~scale.at(~noteArr[1][2])]    * (~root/4),1),
+		Pseq([~scale.at(~noteArr[4][0]),~scale.at(~noteArr[4][1]),~scale.at(~noteArr[4][2])]    * (~root/4),1),
+		Pseq([~scale.at(~noteArr[7][0]),~scale.at(~noteArr[7][1]),~scale.at(~noteArr[7][2])]    * (~root/4),1),
+		Pseq([~scale.at(~noteArr[10][0]),~scale.at(~noteArr[10][1]),~scale.at(~noteArr[10][2])] * (~root/4),1)
 		], inf),
-	\mVol, 0.05,
-	)).play(~negaClock);
+	\mVol, 0.4,
+	)).play;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ~voice3.stop;
  Pdef(\v3, ~voice3 = Pbind(
-	\instrument, \fmSynth,
+	\instrument, Pwrand([\flue, \fmSynth, \harmonica], ~v3arr, inf),
 	\pan, Pfunc{~sentLineTre.asMap},
 	\aAtk, 3,
 	\dur, ~neutClock.tempo*2,
@@ -300,10 +307,11 @@ Pdef(\v2, ~voice2 = Pbind(
 		Prand([~scale.at(~noteArr[8][0]),~scale.at(~noteArr[8][1]),~scale.at(~noteArr[8][2])]    * (~root/2)  ,1),
 		Prand([~scale.at(~noteArr[11][0]),~scale.at(~noteArr[11][1]),~scale.at(~noteArr[11][2])] * (~root/2)  ,1)
 		], inf),
-	\mVol, 0.02
-)).play(~neutClock);
+	\mVol, 0.025;
+)).play;
 }
 )
+
 /*
 note allocation
 0 1 2 3 4 5 6 7 8 9 10 11
