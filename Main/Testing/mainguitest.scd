@@ -11,10 +11,45 @@ s.boot;
 ~lib_func.value;
 //ServerTree.add(~lib_func);
 )
+Window.screenBounds;
+//GUI Window
+/*(
+
+~messArr = Array.newClear(16);
+~messArr = Array.fill(16, " ");
+w = Window.new("Twitter", Window.screenBounds);
+
+~tw1 = StaticText(w, Rect(48,48,1464,55)).stringColor_(Color.black).font_("helvetica");
+~tw1.string_(~messArr[0]);
+~tw2 = StaticText.new(w, Rect(48,103,1464,55*1.5)).stringColor_(Color.black).font_("helvetica");
+~tw2.string_(~messArr[1]);
+~tw3 = StaticText.new(w, Rect(48,158,1464,55*2)).stringColor_(Color.black).font_("helvetica");
+~tw3.string_(~messArr[2]);
+~tw4 = StaticText.new(w, Rect(48,213,1464,55*2.5)).stringColor_(Color.black).font_("helvetica");
+~tw4.string_(~messArr[3]);
+~tw5 = StaticText.new(w, Rect(48,268,1464,55*3)).stringColor_(Color.black).font_("helvetica");
+~tw5.string_(~messArr[4]);
+~tw6 = StaticText.new(w, Rect(48,323,1464,55*3.5)).stringColor_(Color.black).font_("helvetica");
+~tw6.string_(~messArr[5]);
+~tw7 = StaticText.new(w, Rect(48,378,1464,55*4)).stringColor_(Color.black).font_("helvetica");
+~tw7.string_(~messArr[6]);
+~tw8 = StaticText.new(w, Rect(48,433,1464,55*4.5)).stringColor_(Color.black).font_("helvetica");
+~tw8.string_(~messArr[7]);
+~tw9 = StaticText.new(w, Rect(48,488,1464,55*5)).stringColor_(Color.black).font_("helvetica");
+~tw9.string_(~messArr[8]);
+~tw10 = StaticText.new(w, Rect(48,543,1464,55*5.5)).stringColor_(Color.black).font_("helvetica");
+~tw10.string_(~messArr[9]);
+~tw11 = StaticText.new(w, Rect(48,598,1464,55*6)).stringColor_(Color.black).font_("helvetica");
+~tw11.string_(~messArr[10]);
+~tw12 = StaticText.new(w, Rect(48,653,1464,55*6.5)).stringColor_(Color.black).font_("helvetica");
+~tw12.string_(~messArr[11]);
+w.front;
+)*/
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //5a. Test Synths
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Synth(\Guitar);
+Synth(\bassGuitar);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //7. Sentiment Scraping
 ~scraper.value;
@@ -31,6 +66,7 @@ Synth(\Guitar);
 //create ~sentArr and fill it with 1s by default
 ~sentArr = Array.newClear(4);
 ~sentArr = Array.fill(4, 1);
+
 ~i = 0;//~ for loop indexing
 o = OSCFunc({ arg msg, time, addr, recvPort;
 		//add the 4 sentiment values to an array [Positivity, Negativity, Neutrality, Overall]
@@ -181,12 +217,17 @@ o = OSCFunc({ arg msg, time, addr, recvPort;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //End of Dictionary Defs////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+////
 	~n=0;//n for conditional function
 	//Note Scraper Function
 o = OSCFunc({ arg msg, time, addr, recvPort;
+	StaticText.new(c,Rect(0,0,80,30)).string_(msg[2]);
 	//[msg, time, addr, recvPort].postln;//for Debugging
 	~noteIn = msg[1];
-	msg[1].postln;// for Debugging
+	//msg[1].postln;// for Debugging
+	msg[2].postln;
 	~noteVal = ~chordScale.at(~n2deg.at(~noteIn));
 	//"Note Value:".postln;//for debugging
 	//~noteVal.postln;//for debugging
@@ -199,6 +240,7 @@ o = OSCFunc({ arg msg, time, addr, recvPort;
 			~v = ~v+1;
 		});
 		~noteArr[0] = ~noteVal;
+		//~messArr[0] = msg[2];
 		//////////////////////
 	~noteArr.postln;//for debugging
 	//for each value up to 11, place noteArr
@@ -206,6 +248,7 @@ o = OSCFunc({ arg msg, time, addr, recvPort;
 	~notePlay.value;
 	~n = 0;
 	}, {
+		~messArr[~n+1] = ~messArr[~n];
 		~noteArr[~n+1] = ~noteArr[~n];
 		~n = ~n+1;
 	});
@@ -279,7 +322,7 @@ Pdef(\v1, ~voice1 = Pbind(
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ~voice2.stop;
 Pdef(\v2, ~voice2 = Pbind(
-	\instrument, Prand([\PianoC3], /*~v2arr,*/ inf),
+	\instrument, Pwrand([\bassGuitar, \PianoC3], ~v2arr, inf),
 	\pan, Pfunc{~sentLineTwo.asMap},
 	\fFreq, Pwhite(400, 600, inf),
 	\aAtk, 0.001,
@@ -291,7 +334,7 @@ Pdef(\v2, ~voice2 = Pbind(
 		Pseq([~scale.at(~noteArr[7][0]),~scale.at(~noteArr[7][1]),~scale.at(~noteArr[7][2])]    * (~root/4),1),
 		Pseq([~scale.at(~noteArr[10][0]),~scale.at(~noteArr[10][1]),~scale.at(~noteArr[10][2])] * (~root/4),1)
 		], inf),
-	\mVol, 0.25,
+	\mVol, 0.3,
 	)).play;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ~voice3.stop;
@@ -307,7 +350,7 @@ Pdef(\v2, ~voice2 = Pbind(
 		Prand([~scale.at(~noteArr[8][0]),~scale.at(~noteArr[8][1]),~scale.at(~noteArr[8][2])]    * (~root/2)  ,1),
 		Prand([~scale.at(~noteArr[11][0]),~scale.at(~noteArr[11][1]),~scale.at(~noteArr[11][2])] * (~root/2)  ,1)
 		], inf),
-	\mVol, 0.02;
+	\mVol, 0.025;
 )).play;
 }
 )
